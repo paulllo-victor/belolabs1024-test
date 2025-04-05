@@ -6,9 +6,7 @@ import PropTypes from "prop-types";
 import { useSpring, animated } from "@react-spring/web";
 import background from "../assets/images/mode1.gif";
 import bgMusic from "../assets/audio/memory-bg.mp3";
-import axios from "axios";
-
-
+import { saveGameData } from '../config/api';
 
 const defaultDifficulty = "Normal";
 
@@ -39,17 +37,6 @@ const shuffleArray = (array) => {
     [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
   }
   return shuffledArray;
-};
-const saveGameData = async (gameData) => {
-  try {
-    const response = await axios.post("http://localhost:5000/api/memory/save", gameData, {
-      headers: { "Content-Type": "application/json" },
-    });
-
-    console.log("Game data saved successfully", response.data);
-  } catch (error) {
-    console.error("Error saving game data:", error.response ? error.response.data : error.message);
-  }
 };
 
 // Styled Components
@@ -269,17 +256,19 @@ const MemoryMedium = () => {
   const [audioIndex, setAudioIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
 
-
-
-  const handleSaveNewGame = () => {
-    saveGameData({
-        userID,
-        gameDate: new Date(),
-        failed: failedAttempts,
-        difficulty: defaultDifficulty,
-        completed: 0,
-        timeTaken: timer,
-    });
+  const handleSaveNewGame = async () => {
+    try {
+        await saveGameData({
+            userID,
+            gameDate: new Date(),
+            failed: failedAttempts,
+            difficulty: defaultDifficulty,
+            completed: 0,
+            timeTaken: timer,
+        });
+    } catch (error) {
+        console.error('Error in handleSaveNewGame:', error);
+    }
 };
   
   const handleNewGame = () => {
@@ -385,7 +374,7 @@ const MemoryMedium = () => {
                     gameDate: new Date(),
                     failed: failedAttempts,
                     difficulty: defaultDifficulty,
-                    completed: 1,  
+                    completed: 1,
                     timeTaken: timer,
                 });
                 localStorage.setItem("gameCompleted", "true");

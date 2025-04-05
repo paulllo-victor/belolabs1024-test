@@ -10,7 +10,7 @@ import MemoryCardGame from './MemoryCardGame/MemoryCardGame';
 import Congratulations from "./MemoryCardGame/Congratulation";
 import CongtEasy from "./MemoryCardGame/Congratseasy";
 import CongtNormal from "./MemoryCardGame/Congratsnormal";
-
+import GameHistory from './MemoryCardGame/GameHistory';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
@@ -30,29 +30,31 @@ const App = () => {
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/congratulations"
-      element={isAuthenticated ? <Congratulations /> : <Navigate to="/login" />}
-      />
-     
-      <Route path="/congt-easy"
-      element={isAuthenticated ? <CongtEasy /> : <Navigate to="/login" />}
-      />
-      <Route path="/congt-normal"
-      element={isAuthenticated ? <CongtNormal /> : <Navigate to="/login" />}
-      />
+          element={isAuthenticated ? <Congratulations /> : <Navigate to="/login" />}
+        />
+        <Route path="/congt-easy"
+          element={isAuthenticated ? <CongtEasy /> : <Navigate to="/login" />}
+        />
+        <Route path="/congt-normal"
+          element={isAuthenticated ? <CongtNormal /> : <Navigate to="/login" />}
+        />
         <Route path="/easy" 
-       element={isAuthenticated ? <Easy /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <Easy /> : <Navigate to="/login" />}
         />
         <Route path="/medium" 
-         element={isAuthenticated ? <Medium /> : <Navigate to="/login" />}
-         />
+          element={isAuthenticated ? <Medium /> : <Navigate to="/login" />}
+        />
         <Route
           path="/play"
           element={isAuthenticated ? <Play /> : <Navigate to="/login" />}
         />
-  
         <Route
           path="/memory-card-game"
           element={isAuthenticated ? <MemoryCardGame /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/history"
+          element={isAuthenticated ? <GameHistory /> : <Navigate to="/login" />}
         />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>

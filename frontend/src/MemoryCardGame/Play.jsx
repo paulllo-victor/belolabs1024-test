@@ -132,6 +132,11 @@ const Play = () => {
     setIsLevelSelectOpen(true);
   };
 
+  const handleHistoryClick = () => {
+    playClickSound();
+    navigate('/history');
+  };
+
   return (
     <div
       className="background-container"
@@ -158,6 +163,13 @@ const Play = () => {
           onMouseEnter={playHoverSound}
         >
           Settings
+        </button>
+        <button
+          className="history-button"
+          onClick={handleHistoryClick}
+          onMouseEnter={playHoverSound}
+        >
+          History
         </button>
       </div>
 

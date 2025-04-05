@@ -559,3 +559,51 @@ html, body {
         padding: 1.5rem !important;
     }
 }
+
+.history-button {
+  width: 300px;
+  height: 70px;
+  margin: 15px;
+  font-family: "Press Start 2P", sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+  background: linear-gradient(90deg, #4a4e69, #22223b);
+  border: 2px solid #9a8c98;
+  border-radius: 10px;
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.3),
+    0 6px 12px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+}
+
+.history-button:hover {
+  background: linear-gradient(90deg, #6c757d, #343a40);
+  box-shadow: 
+    0 0 20px #ffffff,
+    0 8px 16px rgba(0, 0, 0, 0.6);
+  transform: scale(1.1);
+}
+
+.history-button:active {
+  transform: scale(0.95);
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 768px) {
+  .history-button {
+    width: 250px;
+    height: 60px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .history-button {
+    width: 200px;
+    height: 50px;
+    font-size: 12px;
+  }
+}

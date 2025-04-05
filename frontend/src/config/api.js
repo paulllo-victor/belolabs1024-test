@@ -10,10 +10,16 @@ export const ENDPOINTS = {
 // Função reutilizável para salvar dados do jogo
 export const saveGameData = async (gameData) => {
   try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
     const response = await fetch(`${API_URL}${ENDPOINTS.SAVE_GAME}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(gameData),
     });

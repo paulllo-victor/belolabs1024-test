@@ -4,6 +4,7 @@ import Login from './Login/Login';
 import Register from './Register/Register';
 import Play from './MemoryCardGame/Play';
 import Game from './MemoryCardGame/Game';
+import GameHistory from './MemoryCardGame/GameHistory';
 import './App.css';
 
 const App = () => {
@@ -64,6 +65,16 @@ const App = () => {
           element={
             isAuthenticated ? (
               <Game onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            isAuthenticated ? (
+              <GameHistory />
             ) : (
               <Navigate to="/login" replace />
             )

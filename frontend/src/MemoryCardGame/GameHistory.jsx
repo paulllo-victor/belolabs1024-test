@@ -4,7 +4,7 @@ import { Box, Grid, Typography, Pagination } from '@mui/material';
 import { styled } from '@mui/system';
 import background from "../assets/images/mode1.gif";
 
-const StyledGameContainer = styled(Box)({
+const StyledGameContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   width: '100vw',
   display: 'flex',
@@ -15,26 +15,70 @@ const StyledGameContainer = styled(Box)({
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   padding: '2rem',
-});
+  [theme.breakpoints.down('sm')]: {
+    padding: '1rem',
+  },
+}));
 
-const HistoryContainer = styled(Box)({
+const HistoryContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'rgba(44, 44, 84, 0.95)',
   borderRadius: '15px',
   border: '2px solid #00d9ff',
   padding: '2rem',
+  paddingBottom: '1rem',
   maxWidth: '900px',
   width: '100%',
   marginTop: '2rem',
+  marginBottom: '3rem',
   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4)',
+  height: '50vh',
+  display: 'flex',
+  flexDirection: 'column',
+  
+  [theme.breakpoints.down('sm')]: {
+    padding: '1rem',
+    paddingBottom: '0.5rem',
+    marginTop: '1rem',
+    marginBottom: '2rem',
+    height: '65vh',
+  },
+}));
+
+const ResultsWrapper = styled(Box)({
+  flexGrow: 1,
+  overflowY: 'auto',
+  paddingRight: '10px',
+  marginRight: '-10px',
+  marginBottom: '1rem',
+
+  '&::-webkit-scrollbar': {
+    width: '8px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: 'rgba(26, 26, 46, 0.5)', 
+    borderRadius: '10px',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: '#00d9ff',
+    borderRadius: '10px',
+    border: '2px solid rgba(26, 26, 46, 0.5)',
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    backgroundColor: '#00bfff',
+  },
 });
 
-const PixelTitle = styled(Typography)({
+const PixelTitle = styled(Typography)(({ theme }) => ({
   fontFamily: '"Press Start 2P", cursive',
   color: '#00d9ff',
   textAlign: 'center',
   marginBottom: '2rem',
   textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
-});
+  fontSize: 'clamp(1.5rem, 5vw, 2.5rem)',
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: '1rem',
+  },
+}));
 
 const PixelButton = styled('button')({
   padding: '10px 20px',
@@ -58,7 +102,7 @@ const PixelButton = styled('button')({
   },
 });
 
-const ResultCard = styled(Box)({
+const ResultCard = styled(Box)(({ theme }) => ({
   backgroundColor: 'rgba(26, 26, 46, 0.9)',
   border: '1px solid #00d9ff',
   borderRadius: '8px',
@@ -72,9 +116,18 @@ const ResultCard = styled(Box)({
     transform: 'translateY(-2px)',
     boxShadow: '0 4px 8px rgba(0, 217, 255, 0.2)',
   },
-});
+  [theme.breakpoints.down('sm')]: {
+    padding: '0.75rem',
+    fontSize: '0.7rem',
+    marginBottom: '0.75rem',
+  },
+  '& .MuiTypography-root': {
+    fontSize: 'inherit',
+    wordBreak: 'break-word',
+  }
+}));
 
-const StyledPagination = styled(Pagination)({
+const StyledPagination = styled(Pagination)(({ theme }) => ({
   marginTop: '2rem',
   '& .MuiPaginationItem-root': {
     color: '#fff',
@@ -90,8 +143,16 @@ const StyledPagination = styled(Pagination)({
     '&:hover': {
       backgroundColor: 'rgba(0, 217, 255, 0.2)',
     },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.7rem',
+      minWidth: '30px',
+      height: '30px',
+    },
   },
-});
+  [theme.breakpoints.down('sm')]: {
+    marginTop: '1rem',
+  },
+}));
 
 const GameHistory = () => {
   const navigate = useNavigate();
@@ -169,43 +230,45 @@ const GameHistory = () => {
           <Typography style={{ color: '#fff', textAlign: 'center' }}>No games played yet</Typography>
         ) : (
           <>
-            <Grid container spacing={2}>
-              {results.map((result, index) => (
-                <Grid item xs={12} key={result.id || index}>
-                  <ResultCard>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={4}>
-                        <Typography style={{ color: getDifficultyColor(result.difficulty) }}>
-                          {result.difficulty}
-                        </Typography>
-                        <Typography style={{ opacity: 0.8 }}>
-                          {formatDate(result.gameDate)}
-                        </Typography>
+            <ResultsWrapper>
+              <Grid container spacing={2}>
+                {results.map((result, index) => (
+                  <Grid item xs={12} key={result.id || index}>
+                    <ResultCard>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={4}>
+                          <Typography style={{ color: getDifficultyColor(result.difficulty) }}>
+                            {result.difficulty}
+                          </Typography>
+                          <Typography style={{ opacity: 0.8 }}>
+                            {formatDate(result.gameDate)}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <Typography>
+                            Failed Attempts: {result.failedAttempts}
+                          </Typography>
+                          <Typography>
+                            Time: {result.timeTaken}s
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <Typography style={{ color: '#00d9ff' }}>
+                            Score: {result.score}
+                          </Typography>
+                          <Typography style={{ color: result.completed ? '#4CAF50' : '#f44336' }}>
+                            {result.completed ? '✅ Completed' : '❌ Abandoned'}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <Typography>
-                          Failed Attempts: {result.failedAttempts}
-                        </Typography>
-                        <Typography>
-                          Time: {result.timeTaken}s
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <Typography style={{ color: '#00d9ff' }}>
-                          Score: {result.score}
-                        </Typography>
-                        <Typography style={{ color: result.completed ? '#4CAF50' : '#f44336' }}>
-                          {result.completed ? '✅ Completed' : '❌ Abandoned'}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </ResultCard>
-                </Grid>
-              ))}
-            </Grid>
+                    </ResultCard>
+                  </Grid>
+                ))}
+              </Grid>
+            </ResultsWrapper>
 
             {totalPages > 1 && (
-              <Box display="flex" justifyContent="center">
+              <Box display="flex" justifyContent="center" marginTop="auto">
                 <StyledPagination 
                   count={totalPages}
                   page={page}

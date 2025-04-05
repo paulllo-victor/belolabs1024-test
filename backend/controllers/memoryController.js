@@ -24,7 +24,6 @@ exports.saveGameData = async (req, res) => {
         res.status(500).json({ message: 'Error saving game data', error });
     }
 };
-// Get user results
 exports.getResults = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -32,11 +31,10 @@ exports.getResults = async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        // Get total count for pagination
-        const totalResults = await MemoryGame.countDocuments({ userId });
+        const totalResults = await Save.countDocuments({ userID: userId });
         const totalPages = Math.ceil(totalResults / limit);
 
-        const results = await MemoryGame.find({ userId })
+        const results = await Save.find({ userID: userId })
             .sort({gameDate: -1 })
             .skip(skip)
             .limit(limit);

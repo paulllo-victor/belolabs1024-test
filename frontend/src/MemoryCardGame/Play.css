@@ -37,13 +37,13 @@ html, body {
   padding: 20px;
   z-index: 1000; /* Ensures it appears above everything */
   color: #fff; /* Default text color */
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
 }
 
-
-
 /* Calm Mode button styling */
-
-
 
 /* Volume control */
 .volume-control {
@@ -82,8 +82,6 @@ html, body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-
-
 /* Volume label styling */
 .modal-h2 {
   font-family: "Orbitron", sans-serif; 
@@ -93,17 +91,12 @@ html, body {
   font-size: 24px;
 }
 
-
-
 /* Specific styling for Calm Mode h2 text */
 .calm-mode-label {
   color: #ffffff; /* White color for Calm Mode label */
   text-shadow: none; /* Remove any text shadow */
   font-size: 24px; /* Keep the font size the same */
 }
-
-
-
 
 /* Background container */
 .background-container {
@@ -193,56 +186,59 @@ html, body {
 .calm-mode {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-top: 2px; /* Increased space */
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
-.switch {
+.calm-mode-label {
+    color: #ffd700;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.toggle-label {
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 0.8rem;
+    color: #fff;
+    margin: 0 10px;
+}
+
+.toggle-button {
     position: relative;
     display: inline-block;
-    width: 60px; /* Slightly larger width */
-    height: 30px; /* Larger height */
-    margin-left: 15px; /* Increased margin */
+    width: 80px;
+    height: 30px;
+    background-color: #666;
+    border-radius: 30px;
+    transition: background-color 0.3s;
 }
 
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+.toggle-button.active {
+    background-color: #ffd700;
 }
 
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 30px; /* Increased border-radius for a smoother look */
-}
-
-.slider:before {
-    position: absolute;
+.toggle-button::before {
     content: "";
-    height: 22px; /* Increased size of the circle */
-    width: 22px; /* Increased size of the circle */
-    left: 4px;
-    bottom: 4px;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    left: 2px;
+    bottom: 2px;
     background-color: white;
-    transition: 0.4s;
     border-radius: 50%;
+    transition: transform 0.3s;
 }
 
-input:checked + .slider {
-    background-color: #4caf50;
+.toggle-button.active::before {
+    transform: translateX(50px);
 }
-
-input:checked + .slider:before {
-    transform: translateX(30px); /* Adjusted the movement to match the increased width */
-}
-
 
 /* Calm Mode button styling */
 .game-button.calm-button {
@@ -271,7 +267,6 @@ input:checked + .slider:before {
   z-index: 10;
   animation: none; /* Remove the pulse animation */
 }
-
 
 .difficulty-selection {
     display: flex;
@@ -325,7 +320,6 @@ input:checked + .slider:before {
   
   }
 
-
   @keyframes dificultyfloating {
     0%, 100% {
         text-shadow: 
@@ -344,20 +338,224 @@ input:checked + .slider:before {
 }
   
   .play-button {
-    margin-top: 50px;
-    padding: 10px 20px;
-    background: #4a4e69;
-    color: #fff;
-    font-family: "Press Start 2P", sans-serif;
-    font-size: 18px;
-    border: 2px solid #9a8c98;
-    border-radius: 10px;
+    background: linear-gradient(45deg, rgba(30, 30, 46, 0.9), rgba(24, 24, 37, 0.9));
+    color: #ffd700;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    padding: 1.2rem 2.5rem;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 1rem;
+    border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
-  }
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 1rem;
+}
   
   .play-button:hover {
-    background: #6c757d;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 8px 16px rgba(0, 0, 0, 0.6);
-    transform: scale(1.1);
+    background: linear-gradient(45deg, rgba(40, 40, 56, 0.9), rgba(34, 34, 47, 0.9));
+    border-color: #ffd700;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
   }
+
+  .play-button:active {
+    transform: translateY(0);
+  }
+
+/* Settings button styling */
+.settings-button {
+    background: linear-gradient(45deg, rgba(30, 30, 46, 0.9), rgba(24, 24, 37, 0.9));
+    color: #ffd700;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    padding: 1.2rem 2.5rem;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 1rem;
+}
+
+.settings-button:hover {
+    background: linear-gradient(45deg, rgba(40, 40, 56, 0.9), rgba(34, 34, 47, 0.9));
+    border-color: #ffd700;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
+}
+
+.settings-button:active {
+    transform: translateY(0);
+}
+
+/* Modal styling */
+.ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+}
+
+.ReactModal__Content {
+    background: linear-gradient(135deg, rgba(30, 30, 46, 0.95), rgba(24, 24, 37, 0.95)) !important;
+    border: 2px solid #ffd700 !important;
+    border-radius: 15px !important;
+    padding: 2rem !important;
+    color: #fff !important;
+    width: 90% !important;
+    max-width: 500px !important;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.1) !important;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Modal header */
+.modal-h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    color: #ffd700;
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.modal-h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffd700, transparent);
+}
+
+/* Volume controls */
+.volume-control {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.volume-control label {
+    color: #ffd700;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.volume-slider {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 215, 0, 0.2);
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #ffd700;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+/* Close button */
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: #ffd700;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+}
+
+.modal-close:hover {
+    transform: rotate(90deg);
+    color: #fff;
+}
+
+.modal-close:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .settings-button {
+        padding: 1rem 2rem;
+        font-size: 0.9rem;
+    }
+
+    .play-button {
+        padding: 1rem 2rem;
+        font-size: 0.9rem;
+    }
+
+    .modal-h2 {
+        font-size: 1.2rem;
+    }
+
+    .volume-control label,
+    .calm-mode-label {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.8rem;
+    }
+
+    .play-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.8rem;
+    }
+
+    .modal-h2 {
+        font-size: 1rem;
+    }
+
+    .ReactModal__Content {
+        padding: 1.5rem !important;
+    }
+}

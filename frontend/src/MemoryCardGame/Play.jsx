@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
+import LevelSelectModal from "../components/LevelSelectModal";
 import backgroundGif from "../assets/images/play.gif";
 import calmBackground from "../assets/images/calm-wallpaper.jpg";
 import backgroundMusic from "../assets/audio/background-music.mp3";
@@ -36,38 +37,10 @@ const modalStyles = {
   },
 };
 
-const modalPlayStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    zIndex: 999,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  content: {
-    backgroundColor: "#1e1e2e",
-    border: "2px solid #4a4e69",
-    borderRadius: "20px",
-    padding: "40px",
-    maxWidth: "600px",
-    height: "200px",
-    width: "90%",
-    color: "#fff",
-    textAlign: "center",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    overflow: "hidden",
-  },
-};
-
 const Play = () => {
   const navigate = useNavigate();
-  const [SettingsmodalIsOpen, setModalSettingIsOpen] = useState(false);
-  const [PlaymodalIsOpen, setModalPlayIsOpen] = useState(false);
-  const [difficulty, setDifficulty] = useState(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isLevelSelectOpen, setIsLevelSelectOpen] = useState(false);
   const [isCalmMode, setIsCalmMode] = useState(false);
   
   const [bgVolume, setBgVolume] = useState(
@@ -137,73 +110,26 @@ const Play = () => {
   };
 
   const playHoverSound = () => {
-    hoverAudioRef.current.currentTime = 0;
-    hoverAudioRef.current.play().catch((error) =>
-      console.error("Hover sound playback failed:", error)
-    );
+    if (!mutedSfx) {
+      hoverAudioRef.current.currentTime = 0;
+      hoverAudioRef.current.play().catch((error) =>
+        console.error("Hover sound playback failed:", error)
+      );
+    }
   };
 
   const playClickSound = () => {
-    clickAudioRef.current.currentTime = 0;
-    clickAudioRef.current.play().catch((error) =>
-      console.error("Click sound playback failed:", error)
-    );
-  };
-
-  const SettingopenModal = () => {
-    setModalSettingIsOpen(true);
-    playClickSound();
-  };
-
-  const SettingcloseModal = () => {
-    setModalSettingIsOpen(false);
-    playClickSound();
-  };
-
-  const PlayopenModal = () => {
-    playClickSound();
-    setModalPlayIsOpen(true);
-  };
-
-  const PlaycloseModal = () => {
-    playClickSound();
-    setModalPlayIsOpen(false);
-  };
-
-  const handleDifficultySelect = (level) => {
-    setDifficulty(level);
-  };
-
-  const handlePlay = () => {
-    playClickSound();
-    const userID = localStorage.getItem("userID");
-    if (!userID) {
-      alert("UserID is missing. Please log in again.");
-      return;
+    if (!mutedSfx) {
+      clickAudioRef.current.currentTime = 0;
+      clickAudioRef.current.play().catch((error) =>
+        console.error("Click sound playback failed:", error)
+      );
     }
-    localStorage.setItem("gameStarted", "true");
+  };
 
-    if (isCalmMode) {
-      if (difficulty === "red") {
-        navigate("/calm-hard");
-      } else if (difficulty === "yellow") {
-        navigate("/calm-medium");
-      } else if (difficulty === "green") {
-        navigate("/calm-easy");
-      } else {
-        alert(`Selected difficulty: ${difficulty}`);
-      }
-    } else {
-      if (difficulty === "red") {
-        navigate("/memory-card-game");
-      } else if (difficulty === "yellow") {
-        navigate("/medium");
-      } else if (difficulty === "green") {
-        navigate("/easy");
-      } else {
-        alert(`Selected difficulty: ${difficulty}`);
-      }
-    }
+  const handlePlayClick = () => {
+    playClickSound();
+    setIsLevelSelectOpen(true);
   };
 
   return (
@@ -213,187 +139,83 @@ const Play = () => {
         backgroundImage: `url(${isCalmMode ? calmBackground : backgroundGif})`,
       }}
     >
-      <h1 className={`game-title ${isCalmMode ? "calm-title" : ""}`}>
-        WonderCards
-      </h1>
+      <h1 className="game-title">Memory Game</h1>
 
       <div className="button-container">
         <button
-          className={`game-button ${isCalmMode ? "calm-button" : ""}`}
-          onClick={PlayopenModal}
+          className="play-button"
+          onClick={handlePlayClick}
           onMouseEnter={playHoverSound}
         >
-          Play
+          Play Game
         </button>
         <button
-          className={`game-button ${isCalmMode ? "calm-button" : ""}`}
+          className="settings-button"
           onClick={() => {
             playClickSound();
-            alert("Instructions coming soon!");
+            setIsSettingsOpen(true);
           }}
-          onMouseEnter={playHoverSound}
-        >
-          Instructions
-        </button>
-        <button
-          className={`game-button ${isCalmMode ? "calm-button" : ""}`}
-          onClick={SettingopenModal}
           onMouseEnter={playHoverSound}
         >
           Settings
         </button>
       </div>
-      <Modal
-        isOpen={SettingsmodalIsOpen}
-        onRequestClose={SettingcloseModal}
-        style={{
-          ...modalStyles,
-          content: {
-            ...modalStyles.content,
-            backgroundColor: isCalmMode ? "#86a17d" : "#1e1e2e",
-            color: isCalmMode ? "#ffffff" : "#fff",
-          },
-        }}
-      >
-        <button
-          onClick={SettingcloseModal}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "#fff",
-          }}
-        >
-          <X size={24} />
-        </button>
-
-        <h2 className={`${isCalmMode ? "calm-mode-label" : ""} modal-h2`}>
-          Background Music
-        </h2>
-        <div className="volume-control">
-          <span className="volume-icon">{mutedBg ? "🔇" : "🔊"}</span>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={bgVolume}
-            onChange={handleBgVolumeChange}
-            className="volume-slider"
-          />
-        </div>
-
-        <h2 className={`${isCalmMode ? "calm-mode-label" : ""} modal-h2`}>
-          Sound Effects
-        </h2>
-        <div className="volume-control">
-          <span className="volume-icon">{mutedSfx ? "🔇" : "🔊"}</span>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={sfxVolume}
-            onChange={handleSfxVolumeChange}
-            className="volume-slider"
-          />
-        </div>
-
-        {/* <div className="calm-mode">
-          <h2 className={`${isCalmMode ? "calm-mode-label" : ""} modal-h2`}>
-            Calm Mode
-          </h2>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isCalmMode}
-              onChange={toggleCalmMode}
-            />
-            <span className="slider round"></span>
-          </label>
-        </div> */}
-      </Modal>
 
       <Modal
-        isOpen={PlaymodalIsOpen}
-        onRequestClose={PlaycloseModal}
-        style={{
-          ...modalPlayStyles,
-          content: {
-            ...modalPlayStyles.content,
-            backgroundColor: isCalmMode ? "#86a17d" : "#1e1e2e",
-            color: isCalmMode ? "#ffffff" : "#fff",
-          },
-        }}
+        isOpen={isSettingsOpen}
+        onRequestClose={() => setIsSettingsOpen(false)}
+        style={modalStyles}
+        contentLabel="Settings Modal"
       >
-        <button
-          onClick={PlaycloseModal}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "#fff",
-          }}
-        >
-          <X size={24} />
-        </button>
-
-        <h2 className={`${isCalmMode ? "calm-mode-label" : ""} modal-h2`}>
-          Select Difficulty
-        </h2>
-        <div className="difficulty-selection">
-          <button
-            onClick={() => {
-              handleDifficultySelect("green");
-              playClickSound();
-            }}
-            className={`difficulty-button green ${
-              difficulty === "green" && !isCalmMode ? "selected" : ""
-            } ${isCalmMode && difficulty === "green" ? "calm-selected" : ""}`}
-            onMouseEnter={playHoverSound}
-          >
-            Easy
-          </button>
-          <button
-            onClick={() => {
-              handleDifficultySelect("yellow");
-              playClickSound();
-            }}
-            className={`difficulty-button yellow ${
-              difficulty === "yellow" && !isCalmMode ? "selected" : ""
-            } ${isCalmMode && difficulty === "yellow" ? "calm-selected" : ""}`}
-            onMouseEnter={playHoverSound}
-          >
-            Normal
-          </button>
-          <button
-            onClick={() => {
-              handleDifficultySelect("red");
-              playClickSound();
-            }}
-            className={`difficulty-button red ${
-              difficulty === "red" && !isCalmMode ? "selected" : ""
-            } ${isCalmMode && difficulty === "red" ? "calm-selected" : ""}`}
-            onMouseEnter={playHoverSound}
-          >
-            Hard
-          </button>
-        </div>
-
-        <div>
-          <button
-            onClick={handlePlay}
-            className="play-button"
-            onMouseEnter={playHoverSound}
-          >
-            Accept
-          </button>
+        <div className="modal-overlay" onClick={() => setIsSettingsOpen(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h2 className="modal-h2">Settings</h2>
+            <div className="settings-content">
+              <div className="volume-control">
+                <label>Background Music</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={bgVolume}
+                  onChange={handleBgVolumeChange}
+                />
+              </div>
+              <div className="volume-control">
+                <label>Sound Effects</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={sfxVolume}
+                  onChange={handleSfxVolumeChange}
+                />
+              </div>
+              <div className="calm-mode-toggle">
+                <label className="calm-mode-label">Calm Mode</label>
+                <div className="toggle-container">
+                  <span className="toggle-label">OFF</span>
+                  <button
+                    className={`toggle-button ${isCalmMode ? "active" : ""}`}
+                    onClick={toggleCalmMode}
+                  >
+                    <span className="toggle-handle"></span>
+                  </button>
+                  <span className="toggle-label">ON</span>
+                </div>
+              </div>
+            </div>
+            <button className="modal-close" onClick={() => setIsSettingsOpen(false)}>
+              <X />
+            </button>
+          </div>
         </div>
       </Modal>
+
+      <LevelSelectModal
+        isOpen={isLevelSelectOpen}
+        onClose={() => setIsLevelSelectOpen(false)}
+      />
     </div>
   );
 };

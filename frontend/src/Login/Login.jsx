@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios'; // Remove axios import
 import { Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
 import { styled } from '@mui/system';
 import background from "../assets/images/mode1.gif"; // Assuming background image path
+import { API_URL } from '../config/api'; // Import API_URL
 
 // Styled Components (similar to GameHistory)
 const StyledPageContainer = styled(Box)(({ theme }) => ({
@@ -130,7 +131,6 @@ const Login = ({ onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Limpa o erro quando o usuário começa a digitar
   useEffect(() => {
     if (error) setError('');
   }, [formData]);
@@ -141,17 +141,39 @@ const Login = ({ onLogin }) => {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:5001/api/users/login', formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.userID);
-      onLogin();
-      navigate('/play');
-    } catch (error) {
-      if (error.response?.status === 400) {
-        setError('User not found. Please register first.');
+      // Use fetch with API_URL
+      const response = await fetch(`${API_URL}/api/users/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json(); // Always try to parse JSON
+
+      if (!response.ok) {
+        // Handle HTTP errors (4xx, 5xx)
+        if (response.status === 400) {
+          // Specific handling for 400 (User not found)
+          setError('User not found. Please register first.');
+        } else {
+          // Use message from API response if available, otherwise generic error
+          throw new Error(data.message || `HTTP error! status: ${response.status}`);
+        }
       } else {
-        setError(error.response?.data.message || 'Error logging in. Please try again.');
+        // Success path
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userID', data.userID);
+        onLogin();
+        navigate('/play');
       }
+
+    } catch (err) { // Catch fetch errors or errors thrown manually
+      // Ensure err.message exists and is displayed
+      setError(err.message || 'Error logging in. Please check connection and try again.');
+      // Log the full error for debugging
+      console.error("Login error:", err);
     } finally {
       setIsLoading(false);
     }

@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
 import { styled } from '@mui/system';
-import background from "../assets/images/mode1.gif"; // Assuming background image path
+import background from "../assets/images/mode1.gif";
+import { API_URL } from '../config/api';
 
-// Styled Components (Copied from Login.jsx refactor - ensure consistency)
 const StyledPageContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   width: '100vw',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center', // Center the form vertically
+  justifyContent: 'center',
   alignItems: 'center',
   backgroundImage: `url(${background})`,
   backgroundSize: 'cover',
@@ -29,7 +29,7 @@ const StyledFormContainer = styled(Box)(({ theme }) => ({
   borderRadius: '15px',
   border: '2px solid #00d9ff',
   padding: '3rem',
-  maxWidth: '500px', // Adjust max width as needed
+  maxWidth: '500px',
   width: '100%',
   boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4)',
   textAlign: 'center',
@@ -92,7 +92,7 @@ const StyledButton = styled(Button)({
   borderRadius: '4px',
   boxShadow: '0 0 10px #00d9ff',
   transition: 'all 0.3s ease',
-  textTransform: 'none', // Keep original button text case
+  textTransform: 'none',
   '&:hover': {
     background: 'linear-gradient(45deg, #21CBF3 30%, #2196F3 90%)',
     boxShadow: '0 0 15px #00d9ff',
@@ -123,7 +123,7 @@ const StyledError = styled(Alert)({
   },
 });
 
-const Register = () => {
+const Register = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -156,23 +156,62 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:5001/api/users/register', {
-        username: formData.username,
-        password: formData.password
+      const registerResponse = await fetch(`${API_URL}/api/users/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password
+        }),
       });
 
-      if (response.data.success) {
-        navigate('/login'); // Redirect to login after successful registration
+      const registerData = await registerResponse.json();
+
+      if (!registerResponse.ok) {
+         if (registerResponse.status === 400) {
+           setError('Username already exists. Please choose another one.');
+         } else {
+           throw new Error(registerData.message || `HTTP error! status: ${registerResponse.status}`);
+         }
+         setIsLoading(false); 
+         return; 
       }
-    } catch (err) {
-      if (err.response?.status === 400) {
-        setError('Username already exists. Please choose another one.');
-      } else {
-        setError(err.response?.data.message || 'Error registering. Please try again.');
+
+      try {
+        const loginResponse = await fetch(`${API_URL}/api/users/login`, {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify({
+             username: formData.username,
+             password: formData.password
+           }),
+        });
+        
+        const loginData = await loginResponse.json();
+
+        if (!loginResponse.ok) {
+           throw new Error(loginData.message || `Auto-login HTTP error! status: ${loginResponse.status}`);
+        }
+
+        localStorage.setItem('token', loginData.token);
+        localStorage.setItem('userID', loginData.userID);
+        onLogin();
+
+      } catch (loginErr) {
+        console.error("Auto-login after registration failed:", loginErr);
+        setError('Registration successful, but auto-login failed. Please log in manually.');
       }
+
+    } catch (regErr) {
+      setError(regErr.message || 'Error registering. Please check connection and try again.');
+      console.error("Registration error:", regErr);
     } finally {
       setIsLoading(false);
-    }
+    } 
   };
 
   const handleLoginRedirect = () => {
@@ -222,7 +261,7 @@ const Register = () => {
         />
         <Box sx={{ display: 'flex', gap: 2, marginTop: 2 }}>
           <StyledButton
-            variant="outlined" // Sign In button as outlined
+            variant="outlined"
             onClick={handleLoginRedirect}
             disabled={isLoading}
              sx={{ 
@@ -255,6 +294,10 @@ const Register = () => {
       </StyledFormContainer>
     </StyledPageContainer>
   );
+};
+
+Register.propTypes = {
+  onLogin: PropTypes.func.isRequired,
 };
 
 export default Register;

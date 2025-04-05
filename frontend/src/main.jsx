@@ -1,4 +1,4 @@
-import { StrictMode, useState } from 'react';
+import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Login/Login';
@@ -28,7 +28,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register onLogin={handleLogin} />} />
         <Route path="/congratulations"
           element={isAuthenticated ? <Congratulations /> : <Navigate to="/login" />}
         />
@@ -63,7 +63,5 @@ const App = () => {
 };
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+  <App />
 );

@@ -46,7 +46,7 @@ const App = () => {
             isAuthenticated ? (
               <Navigate to="/play" replace />
             ) : (
-              <Register />
+              <Register onLogin={handleLogin} />
             )
           }
         />

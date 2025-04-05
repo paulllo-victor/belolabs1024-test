@@ -155,6 +155,13 @@ const Play = () => {
           Play Game
         </button>
         <button
+          className="history-button"
+          onClick={handleHistoryClick}
+          onMouseEnter={playHoverSound}
+        >
+          History
+        </button>
+        <button
           className="settings-button"
           onClick={() => {
             playClickSound();
@@ -163,13 +170,6 @@ const Play = () => {
           onMouseEnter={playHoverSound}
         >
           Settings
-        </button>
-        <button
-          className="history-button"
-          onClick={handleHistoryClick}
-          onMouseEnter={playHoverSound}
-        >
-          History
         </button>
       </div>
 

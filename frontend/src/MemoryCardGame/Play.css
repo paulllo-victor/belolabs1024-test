@@ -354,6 +354,8 @@ html, body {
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-top: 1rem;
+    width: 300px; /* Ensure fixed width */
+    text-align: center; /* Ensure text is centered */
 }
   
   .play-button:hover {
@@ -385,6 +387,8 @@ html, body {
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-top: 1rem;
+    width: 300px; /* Ensure fixed width */
+    text-align: center; /* Ensure text is centered */
 }
 
 .settings-button:hover {
@@ -523,11 +527,13 @@ html, body {
     .settings-button {
         padding: 1rem 2rem;
         font-size: 0.9rem;
+        width: 250px; /* Adjusted width */
     }
 
     .play-button {
         padding: 1rem 2rem;
         font-size: 0.9rem;
+        width: 250px; /* Adjusted width */
     }
 
     .modal-h2 {
@@ -544,11 +550,13 @@ html, body {
     .settings-button {
         padding: 0.8rem 1.5rem;
         font-size: 0.8rem;
+        width: 200px; /* Adjusted width */
     }
 
     .play-button {
         padding: 0.8rem 1.5rem;
         font-size: 0.8rem;
+        width: 200px; /* Adjusted width */
     }
 
     .modal-h2 {
@@ -561,49 +569,53 @@ html, body {
 }
 
 .history-button {
-  width: 300px;
-  height: 70px;
-  margin: 15px;
-  font-family: "Press Start 2P", sans-serif;
-  font-size: 16px;
-  color: #ffffff;
-  background: linear-gradient(90deg, #4a4e69, #22223b);
-  border: 2px solid #9a8c98;
-  border-radius: 10px;
-  box-shadow: 
-    0 0 10px rgba(255, 255, 255, 0.3),
-    0 6px 12px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(45deg, rgba(30, 30, 46, 0.9), rgba(24, 24, 37, 0.9));
+  color: #ffd700;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  padding: 1.2rem 2.5rem; /* Match play/settings padding */
+  font-family: 'Press Start 2P', sans-serif;
+  font-size: 1rem; /* Match play/settings font size */
+  border-radius: 12px; /* Match play/settings border radius */
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Match play/settings shadow */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 15px;
+  width: 300px; /* Ensure fixed width */
+  text-align: center; /* Ensure text is centered */
+  height: auto;
 }
 
 .history-button:hover {
-  background: linear-gradient(90deg, #6c757d, #343a40);
-  box-shadow: 
-    0 0 20px #ffffff,
-    0 8px 16px rgba(0, 0, 0, 0.6);
-  transform: scale(1.1);
+  background: linear-gradient(45deg, rgba(40, 40, 56, 0.9), rgba(34, 34, 47, 0.9)); /* Match hover background */
+  border-color: #ffd700; /* Match hover border color */
+  transform: translateY(-2px); /* Match hover transform */
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15); /* Match hover shadow */
 }
 
 .history-button:active {
-  transform: scale(0.95);
-  box-shadow: 
-    0 0 15px rgba(255, 255, 255, 0.2),
-    0 4px 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(0); 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+  /* Removed redundant width from here */
 }
 
+/* Apply responsive styles from play/settings buttons */
 @media (max-width: 768px) {
   .history-button {
-    width: 250px;
-    height: 60px;
-    font-size: 14px;
+    padding: 1rem 2rem; 
+    font-size: 0.9rem; 
+    width: 250px; /* Adjusted width */
   }
 }
 
 @media (max-width: 480px) {
   .history-button {
-    width: 200px;
-    height: 50px;
-    font-size: 12px;
+    padding: 0.8rem 1.5rem; 
+    font-size: 0.8rem; 
+    width: 200px; /* Adjusted width */
   }
 }
